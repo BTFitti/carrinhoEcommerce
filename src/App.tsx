@@ -1,11 +1,21 @@
+import { Home } from "./pages/home";
+import { Cart } from "./pages/cart";
+import { Layout } from "./components/Layout";
+import { createBrowserRouter } from "react-router-dom";
 
-import './App.css'
-
-function App() {
-
-  return (
-   <div><h1>teste</h1></div>
-  )
-}
-
-export default App
+const router = createBrowserRouter([
+  {
+    element: <Layout/>,
+    children:[
+      {
+        path: "/",
+        element: <Home/>
+      },
+      {
+        path: "/cart",
+        element: <Cart/>
+      }
+    ]
+  }
+])
+export {router};
