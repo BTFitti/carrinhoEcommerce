@@ -9,7 +9,7 @@ export function Header(){
                 </Link>
                 <Link to={"/cart"} className="relative">
                     <FiShoppingCart size={24} color="#121212"/>
-                    <span className="absolute -right-3 -top-5  bg-sky-500 rounded-full w-6 h-6 flex items-center justify-center text-xs text-white">2</span>
+                    <span className="absolute -right-3 -top-5 bg-sky-500 rounded-full w-6 h-6 flex items-center justify-center text-xs text-white">2</span>
                 </Link>
             </nav>
         </header>
