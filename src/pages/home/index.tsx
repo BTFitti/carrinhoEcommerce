@@ -21,7 +21,7 @@ export function Home() {
       setProducts(response.data)
     }
     getProducts()
-  })
+  },[])
 
   return (
     <div>
