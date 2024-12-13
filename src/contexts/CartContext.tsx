@@ -4,6 +4,8 @@ interface CartContentData{
     cart: CartProps[];
     cartAmount: number;
     addItemCart: (newItem: ProductProps)=> void;
+    removeItemCart: (product: CartProps)=> void;
+    total: string;
 }
 interface CartProps{
     id: number;
@@ -21,6 +23,7 @@ export const CartContext = createContext({} as CartContentData)
 function CartProvider({children}: CartProviderProps){
 
     const [cart, setCart] = useState<CartProps[]>([])
+    const [total, setTotal] = useState("")
 
     function addItemCart(newItem: ProductProps){
         //adiciona no carrinho
@@ -32,6 +35,7 @@ function CartProvider({children}: CartProviderProps){
             cartList[indexItem].amount = cartList[indexItem].amount + 1;
             cartList[indexItem].total = cartList[indexItem].amount * cartList[indexItem].price;
             setCart(cartList)
+            totalResultCart(cartList)
             return;
 
         }
@@ -42,10 +46,34 @@ function CartProvider({children}: CartProviderProps){
             total: newItem.price
         }
         setCart(produtos => [...produtos, data])
+        totalResultCart([...cart, data])
+    }
+    function removeItemCart(produto: CartProps){
+        const indexItem = cart.findIndex(item => item.id === produto.id)
+        if(cart[indexItem]?.amount > 1){
+            //Diminui apenas um amount do que eu tenho.
+            let cartList = cart;
+            cartList[indexItem].amount = cartList[indexItem].amount -1;
+            cartList[indexItem].total = cartList[indexItem].total - cartList[indexItem].price;
+            setCart(cartList);
+            totalResultCart(cartList)
+            return;
+        }
+        //remover caso seja 1 o item ao clicar no -
+        //o filter devolve um array tirando aquele que eu cliquei
+        const removeItem = cart.filter(item => item.id !== produto.id)
+        setCart(removeItem)
+        totalResultCart(removeItem)
+    }
+    function totalResultCart(items: CartProps[]){
+        let myCart = items;
+        let result = myCart.reduce((acc, obj)=> { return acc + obj.total}, 0)
+        const resultFormated = result.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
+        setTotal(resultFormated)
     }
 
     return(
-        <CartContext.Provider value={{cart , cartAmount: cart.length, addItemCart}}>
+        <CartContext.Provider value={{cart , cartAmount: cart.length, addItemCart, removeItemCart, total}}>
             {children}
         </CartContext.Provider>
     )
