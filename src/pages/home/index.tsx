@@ -1,27 +1,30 @@
 import { BsCartPlus } from "react-icons/bs";
 import { useEffect, useState } from "react";
-
+import { useContext } from "react";
+import { CartContext } from "../../contexts/CartContext";
 import { api } from "../../servics/api";
 
-
-interface ProductProps{
+export interface ProductProps {
   id: number;
   title: string;
   description: string;
-  price: number; 
+  price: number;
   cover: string;
 }
 export function Home() {
+  const {addItemCart} = useContext(CartContext)
+  const [products, setProducts] = useState<ProductProps[]>([]);
 
-  const [products, setProducts]  = useState<ProductProps[]>([])
-
-  useEffect(()=>{
+  useEffect(() => {
     async function getProducts() {
-      const response = await api.get("/products")
-      setProducts(response.data)
+      const response = await api.get("/products");
+      setProducts(response.data);
     }
-    getProducts()
-  },[])
+    getProducts();
+  }, []);
+  function handleAddCartItem(produto: ProductProps) {
+    addItemCart(produto)
+  }
 
   return (
     <div>
@@ -30,24 +33,29 @@ export function Home() {
           Produtos em alta
         </h1>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 ">
-          {products.map((produto)=>(
+          {products.map((produto) => (
             <section className="w-full" key={produto.id}>
-            <img
-              className="w-full rounded-lg max-h-72 mb-2"
-              src={produto.cover}
-              alt={produto.title}
-            />
-            <p className="font-medium mt-1 mb-2">{produto.title}</p>
-            <div className="flex gap-3 items-center">
-              <strong className="text-zinc-700/90">{produto.price.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-              })}</strong>
-              <button className="bg-zinc-900 p-1 rounded">
-                <BsCartPlus size={20} color="#FFf" />
-              </button>
-            </div>
-          </section>
+              <img
+                className="w-full rounded-lg max-h-72 mb-2"
+                src={produto.cover}
+                alt={produto.title}
+              />
+              <p className="font-medium mt-1 mb-2">{produto.title}</p>
+              <div className="flex gap-3 items-center">
+                <strong className="text-zinc-700/90">
+                  {produto.price.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </strong>
+                <button
+                  onClick={() => handleAddCartItem(produto)}
+                  className="bg-zinc-900 p-1 rounded"
+                >
+                  <BsCartPlus size={20} color="#FFf" />
+                </button>
+              </div>
+            </section>
           ))}
         </div>
       </main>
