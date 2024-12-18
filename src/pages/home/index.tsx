@@ -12,7 +12,9 @@ export interface ProductProps {
   cover: string;
 }
 export function Home() {
-  const {addItemCart} = useContext(CartContext)
+  //usando o contexto criado e pegando dele a função de adicionar um item ao carrinho.
+  const { addItemCart } = useContext(CartContext);
+
   const [products, setProducts] = useState<ProductProps[]>([]);
 
   useEffect(() => {
@@ -22,8 +24,13 @@ export function Home() {
     }
     getProducts();
   }, []);
+
+  {/*
+ >>> função que chama a função criada no contexto, essa função handleAddCartItem recebe um produto que é do tipo ProductProps, tem um (id,title,description, price e cover)
+    e esse produto é recebido através do map da useState products, pode ser meio confuso de entender mas basicamente quando eu faço o map do array products, eu vou ter na tela todos os meus itens e cada item tem um botão de adicionar ao carrinho, então quando eu clico nesse botão eu estou referenciando exatamente aquele produto e esse produto é passado como parâmetro da função handleAddCartItem que dentro dela vai executar a função do contexto addItemCart que recebe como parâmetro o produto clicado. 
+ */}
   function handleAddCartItem(produto: ProductProps) {
-    addItemCart(produto)
+    addItemCart(produto);
   }
 
   return (

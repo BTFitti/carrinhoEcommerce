@@ -1,81 +1,51 @@
+//importando o createContext do react para criar o contexto e o ReactNode para a tipagem do children.
 import { createContext, ReactNode, useState } from "react";
-import { ProductProps } from "../pages/home";
-interface CartContentData{
-    cart: CartProps[];
-    cartAmount: number;
-    addItemCart: (newItem: ProductProps)=> void;
-    removeItemCart: (product: CartProps)=> void;
-    total: string;
+
+//dentro do CartContext temos uma propriedade chamada cart que é uma lista que vai ter todas as propriedades do carrinho
+interface CartContextData {
+  //recebe um carrinho que vai ser uma lista dos itens que tem dentro
+  cart: CartProps[];
+  //criando outra propriedade que vamos exportar que é a quantidade de itens no carrinho.
+  //O valor do cartAmount é o tamanho do array de objetos cart
+  cartAmount: number;
 }
-interface CartProps{
-    id: number;
-    title: string;
-    description: string;
-    price: number;
-    cover: string;
-    amount: number;
-    total: number;
+
+//tipagem do carrinho
+interface CartProps {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  cover: string;
+  //amount é a quantidade de itens que tem no carrinho
+  amount: number;
+  //total é o valor total dos itens do carrinho
+  total: number;
 }
+
+//tipagem do provider que vai receber um children que é do tipo react node, ou seja, é qualque coisa que possa ser renderizada em react
 interface CartProviderProps{
     children: ReactNode;
 }
-export const CartContext = createContext({} as CartContentData)
-function CartProvider({children}: CartProviderProps){
 
-    const [cart, setCart] = useState<CartProps[]>([])
-    const [total, setTotal] = useState("")
+//tipando o CartContext que vai seguir o CartContextData, ele vai respeitar essa tipagem que vai ter uma propriedade chamada cart que é uma lista que vai ter ids, titles, prices etc...
+export const CartContext = createContext({} as CartContextData);
 
-    function addItemCart(newItem: ProductProps){
-        //adiciona no carrinho
-        //verificar se ja nao existe no carrinho
-        const indexItem = cart.findIndex(item => item.id === newItem.id)
-        if(indexItem !== -1){
-            //Se entrou aqui, soma +1 na quantidade e calcula o total novamente.
-            let cartList = cart;
-            cartList[indexItem].amount = cartList[indexItem].amount + 1;
-            cartList[indexItem].total = cartList[indexItem].amount * cartList[indexItem].price;
-            setCart(cartList)
-            totalResultCart(cartList)
-            return;
+//criando o provider e ele recebe como propriedade um children
+function CartProvider({children}: CartProviderProps) {
 
-        }
-        //Adicionar na lista caso nao caia no primeiro if
-        let data ={
-            ...newItem,
-            amount: 1,
-            total: newItem.price
-        }
-        setCart(produtos => [...produtos, data])
-        totalResultCart([...cart, data])
-    }
-    function removeItemCart(produto: CartProps){
-        const indexItem = cart.findIndex(item => item.id === produto.id)
-        if(cart[indexItem]?.amount > 1){
-            //Diminui apenas um amount do que eu tenho.
-            let cartList = cart;
-            cartList[indexItem].amount = cartList[indexItem].amount -1;
-            cartList[indexItem].total = cartList[indexItem].total - cartList[indexItem].price;
-            setCart(cartList);
-            totalResultCart(cartList)
-            return;
-        }
-        //remover caso seja 1 o item ao clicar no -
-        //o filter devolve um array tirando aquele que eu cliquei
-        const removeItem = cart.filter(item => item.id !== produto.id)
-        setCart(removeItem)
-        totalResultCart(removeItem)
-    }
-    function totalResultCart(items: CartProps[]){
-        let myCart = items;
-        let result = myCart.reduce((acc, obj)=> { return acc + obj.total}, 0)
-        const resultFormated = result.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
-        setTotal(resultFormated)
-    }
+  //criando a useState do carrinho que é uma lista que pode ser utilizada por qualquer pagina.
+  const [cart, setCart] = useState<CartProps[]>([]);
 
-    return(
-        <CartContext.Provider value={{cart , cartAmount: cart.length, addItemCart, removeItemCart, total}}>
-            {children}
-        </CartContext.Provider>
-    )
+  return (
+    //Dentro do value vai ser oque podemos exportar, oque podemos exportar vai estar sempre dentro do CartContextData, que é a nossa tipagem do contexto.
+    //No caso nos podemos exportar apenas o cart, mas se eu tento exportar esse cart ele dá erro dizendo que essa variavel ainda nao existe.
+    //Então pra isso eu crio uma useState que é pra armazenar a lista do carrinho
+    <CartContext.Provider value={{ cart, cartAmount: cart.length }}>
+        {/* Aqui dentro vai renderizar o children, que são as rotas que vão receber as informações do contexto*/}
+        {children}
+    </CartContext.Provider>
+  );
 }
+
 export default CartProvider;
