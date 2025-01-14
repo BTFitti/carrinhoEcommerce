@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import { api } from "../../servics/api";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export interface ProductProps {
   id: number;
@@ -44,12 +45,14 @@ export function Home() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 ">
           {products.map((produto) => (
             <section className="w-full" key={produto.id}>
+              <Link to={`/products/${produto.id}`}>
               <img
                 className="w-full rounded-lg max-h-72 mb-2"
                 src={produto.cover}
                 alt={produto.title}
               />
               <p className="font-medium mt-1 mb-2">{produto.title}</p>
+              </Link> 
               <div className="flex gap-3 items-center">
                 <strong className="text-zinc-700/90">
                   {produto.price.toLocaleString("pt-BR", {
