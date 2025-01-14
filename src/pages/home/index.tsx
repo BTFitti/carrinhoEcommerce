@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import { api } from "../../servics/api";
+import toast from "react-hot-toast";
 
 export interface ProductProps {
   id: number;
@@ -30,6 +31,7 @@ export function Home() {
     e esse produto é recebido através do map da useState products, pode ser meio confuso de entender mas basicamente quando eu faço o map do array products, eu vou ter na tela todos os meus itens e cada item tem um botão de adicionar ao carrinho, então quando eu clico nesse botão eu estou referenciando exatamente aquele produto e esse produto é passado como parâmetro da função handleAddCartItem que dentro dela vai executar a função do contexto addItemCart que recebe como parâmetro o produto clicado. 
  */}
   function handleAddCartItem(produto: ProductProps) {
+    toast.success("Produto adicionado ao carrinho!")
     addItemCart(produto);
   }
 
