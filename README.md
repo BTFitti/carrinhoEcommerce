@@ -4,5 +4,10 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [ReactJs](https://react.dev/)
 - Javascript
+- TailwindCSS
 - ContextAPI
+
+
+
+https://github.com/user-attachments/assets/2a26e23c-54c2-41ed-b1cf-b9377302f78b
 
